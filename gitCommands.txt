@@ -1,0 +1,11 @@
+echo "# github.io-masteringMicrobiome" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/arnonl/github.io-masteringMicrobiome.git
+git push -u origin master
+
+# To watch where your "origin" symbol points to:
+git remote -v
+# To chenge where your "origin" symbol points to:
+git remote set-url origin git@github.com:ppreyer/first_app.git
