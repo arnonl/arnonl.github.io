@@ -28,11 +28,25 @@ hello_worlf_again
 hello.world.again
 
 
+number8 <- 8
+8number <- 8
+num?ber8 <- 8
+num-ber8 <- 8
+
+
 
 x <- 3 + 15
 x
 r <- "R rocks"
 r
+
+rm(r, ber8)
+ls()
+
+rm
+
+
+seq(to=37, from=1)
 
 
 
