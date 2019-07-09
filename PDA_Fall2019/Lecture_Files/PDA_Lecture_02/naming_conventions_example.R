@@ -4,16 +4,16 @@
 
 #-------- An example of the Camel style
 
-helloWorld
+helloWorld <- "Hello world"
 
-helloWorlf
+helloWorlf 
 
-helloWorld
+helloWorld 
 
 
 #-------- Example of Snake style
 
-hello_world_again
+hello_world_again <- "Hello world again"
 
 hello_worlf_again
 
