@@ -1,12 +1,14 @@
 ---
 output:
-  revealjs::revealjs_presentation: null
+  revealjs::revealjs_presentation:
+    reveal_options:
+      slideNumber: 'c/t'
   pandoc_args:
   - --slide-level
   - '2'
 ---
 
-### R fundamentals 01: Elementary data types (Sept. 12)
+### R fundamentals 01: Elementary data types (`r format(Sys.Date(), "%b %d, %y")`)
 
 ---
 
@@ -87,7 +89,7 @@ Moreover, `Option+Shift+k` (in Mac) in RStudio will bring keyboard shortcut refe
 
 <br>
 
-_Caveat_: Objects cannot start with certain charecters (such as comma, space), or start with numbers. [Snake case](https://en.wikipedia.org/wiki/Snake_case) and [Camel case](https://en.wikipedia.org/wiki/Camel_case) are a good practices for naming conventions.
+_Caveat_: Objects cannot start with certain charecters (such as comma, space), or start with numbers. [Snake case](https://en.wikipedia.org/wiki/Snake_case) and [Camel case](https://en.wikipedia.org/wiki/Camel_case) are a good practices for naming conventions. Let's see an example:
 
 ##
 
@@ -105,11 +107,13 @@ Case matters, typos matter. In my experience, I have found almost all the errors
 
 ##
 
-You can assign strings to objects using qutation marks. For example, the following code assigns the string "R rocks" to object _r_.
+You can assign strings to objects using quotation marks. For example, the following code assigns the string "R rocks" to object _r_. Also, compare the result of the assignment of "5+13" here in comparison to the  unquoted one.
 
 ```{r eval=TRUE}
   r <- "R rocks"
   r
+  x <- "3+15"
+  x
 ```
 
 <br>
@@ -143,10 +147,10 @@ During an R session, objects are created and stored by name. The R command:
 ```
 
 will display the objects that are currently stored in the session. 
+The list is of all such objects constitute the _workspace_ of R. 
 
 <br>
-
-The list of all such objects constitute the _workspace_ of R. 
+Alternatively you can use the shorter version, `ls()`.
 
 ##
 
@@ -161,7 +165,7 @@ will remove the object `r` created above.
 
 <br>
 
-To remove multiple objects, we just list them with a comma delimiter, like, `rm(r,x)`.
+To remove multiple objects, we just list them with a comma delimiter, like,  `rm(r, x)`.
 
 ---
 
@@ -194,21 +198,22 @@ You can use this to find out the description of the function in question, includ
 <span style="color:blue"> _Question the function to know more about the function in question_. </span> For instance,
 
 ```{r eval=FALSE}
-  ?date()
+  ?date
 ```
 
-would describe the function `date()` in the help tab of the IDE.
+would describe the function `date()` in the Help tab of the IDE.
 
 ##
 
-**Tip**: If you type `da` in console and hit TAB, RStudio will try to autocomplete the function for you, suggesting hints on what possibly could be the built-in function. Also, if you type an open paranthesis, RStudio will also supply the closed parathesis.
+**Tip**: If you type <span style="background-color:#e6e6e6">`da`</span> in console and hit TAB, RStudio will try to autocomplete the function for you, suggesting hints on what possibly could be the built-in function. Also, if you type an open paranthesis, RStudio will also supply the closed parathesis.
 
 <br>
 
 Note that if you type the function name without any paranthesis, R will print the source code of the function, which is not you may probably want.
 
 <br>
-<span style="color:blue">**Classwork/Homework**</span>: Consider the `seq` function. What does it do?
+<span style="color:blue">**Classwork/Homework**</span>: In the console, type `date` and press enter. 
+Compare the output you got to the output you get for `objects`
 <br>
 
 ##
@@ -216,13 +221,13 @@ Note that if you type the function name without any paranthesis, R will print th
 Observe that:
 
 ```{r eval=TRUE}
-  seq(from=1,to=10)
+  seq(from=1, to=10)
 ```
 
 is same as,
 
 ```{r eval=TRUE}
-  seq(1,10)
+  seq(1, 10)
 ```
 
 <br>
@@ -235,21 +240,26 @@ We can always specify `from/to = value`.
 
 ##
 
-But if we do not, R attempts to resolve by position. So in the above code, it is assumed that we want a sequence `from = 1` that goes `to = 10`. 
+But if we do not, R attempts to resolve by position. So in the above code, it is assumed that we want a sequence  `from = 1` that goes  `to = 10`. 
 
 <br>
 
-Although R can try to resolve arguments on its own, best practice is to specify it.
+Although R can try to resolve arguments on its own, the best practice is to specify it.
+
+
+<br>
+<span style="color:blue">**Classwork/Homework**</span>: Consider the `seq` function help page. Describe the derivations of this function.
+<br>
 
 ---
 
 #### Simple manipulations: Vector arithmetic
 
-The function `c()` combines values into a vector or a list. 
-
+The function <span style="background-color:#e6e6e6">`c()`</span> combines values into a vector or a list. 
 <br>
 
-To set up a vector named `x`, say, consisting of eight numbers, namely, 12, 20.1, 53.6, 2, 7.43, 24, 8.2, and 6, the assign statement:
+To set up a vector named `x`, say, consisting of the numbers: 12, 20.1, 53.6, 2, 7.43, 24, 8.2, and 6, 
+the assign statement
 
 ```{r eval=TRUE}
   x <- c(12, 20.1, 53.6, 2, 7.43, 24, 8.2, 6)
@@ -257,35 +267,42 @@ To set up a vector named `x`, say, consisting of eight numbers, namely, 12, 20.1
 
 will assign the vector to the object `x`. 
 
+<br>
+How many elements are in the vector `x`?
+```{r, collapse=TRUE}
+length(x)
+```
+
+
 ##
 
 We can form mathematical expressions using `x` like any other variable. 
 
 For example,  
 
-```{r eval=TRUE}
+```{r eval=TRUE, collapse=TRUE}
   sin(x)
   sqrt(x)
 ```
 
-will list the _sine_ and square root of each number in the vector `x`. 
+will list the _sine_ and _square root_ of each number in the vector `x`. 
 
 ##
 
 We can also combine vector with itself:
 
-```{r eval=TRUE}
-  c(x,x)
+```{r eval=TRUE, collapse=TRUE}
+  c(x, x)
 ```
 
-or include some numbers in-between `c(x,0,x)`.
+or include some numbers in-between `c(x, 0, x)`.
 
 One of the greatest advantages in R (as opposed to say, Matlab) is that we can combine vectors of different length. For example, the following code:
 
 ```{r eval=TRUE, warning=FALSE}
-   y <- c(x,0,x)
-   v <- 2*x + y  + 1
-   v
+   y <- c(x, 0, x)
+   x <- 2*x + y  + 1
+   x
 ```
 
 ## 
@@ -302,27 +319,48 @@ sum: 37 61.3 161.8 7 23.29 73 25.6 19 25 53.2 128.3 58.6 17.86 56.43 41.4 21.2 3
 -----------------------------------------------------------------------------------
 ```
 
-so the expression `2*x` is scaled to the length of the longest vector (here `y`). This is called _recycling_.
+so the expression `2*x` is scaled to the length of the longest vector (here `y`). This is called **_recycling_**.
 
 <br>
-
-Several functions work as usual, like, `mean(), max(), min(), sort()` etc. 
-
-##
-
-Also, as such, square root of a negative number, like `sqrt(-19)` will retrun `NaN` and a warning, but `sqrt(-19+0i)` will work.
+<span style="color:blue">**Classwork/Homework**</span>: Consider the `rep` function help page. Describe the function and its derivations.
 
 ## 
+
+A colon (`:`) - the range operator
+
+In certain cases, when we are only interested in a sequence of integers, we can use a special operator in R - the colon. 
+Instead of using the `seq()` or `c()` functions as before:
+
+```{r, collapse = TRUE}
+seq(from=1, to=10)
+```
+
+We can simply type:
+```{r, collapse = TRUE}
+1:10 
+```
+
+Instead of using `c(5, 4, 3, 2, 1)`,
+we can simply type:
+```{r, collapse = TRUE}
+5:1
+```
+
+
+##
 
 ##### Logical vectors
 
 R allows manipulation of logical quantities. Logical quantities can consist of `TRUE`, `FALSE` or `NA`. Logical vectors are generated by conditions. This assignment:
 
-```{r eval=FALSE, warning=FALSE}
+```{r eval=TRUE, warning=FALSE, results='hold'}
   logical_vector <- x > 13
+  
+  print(x)
+  print(logical_vector)
 ```
 
-generates logical vector corresponding to the elements of `x` that are greater than or less than 13.
+generates a logical vector corresponding to the elements of `x` that are greater than or less than 13.
 
 ##
 
@@ -330,9 +368,9 @@ generates logical vector corresponding to the elements of `x` that are greater t
 
 ```{r eval=TRUE, warning=FALSE}
   # Create a numeric vector
-  v <- c(2,15,5,7)
+  v <- c(2, 15, 5, 7)
   # Create a naming vector
-  n <- c("two","fifteen","five","seven")
+  n <- c("two", "fifteen", "five", "seven")
   # Assign the names to the vector
   names(v) <- n
   v
@@ -341,7 +379,7 @@ generates logical vector corresponding to the elements of `x` that are greater t
 Alternatively, one can name the vectors as follows:
 
 ```{r eval=TRUE, warning=FALSE}
-  v <- c(two=2,fifteen=15,five=5,seven=7)
+  v <- c(two=2, fifteen=15, five=5, seven=7)
   v
 ```
 
@@ -351,7 +389,7 @@ Alternatively, one can name the vectors as follows:
 <span style="color:blue">**Classwork/Homework**</span>: 
 
 1. What happens if you type `names(n) <- v`? 
-2. What if the length of either vectors (names or values) are not the same? 
+2. What if the length of either vector (names or values) is not the same? 
 3. What happens if you label two numbers with the same name?
 <br>
 
@@ -359,15 +397,21 @@ Alternatively, one can name the vectors as follows:
 
 ##### Subsetting vectors
 
-```{r eval=TRUE, warning=FALSE}
-  # Subsetting by index
+```{r eval=TRUE, warning=FALSE, collapse=TRUE}
+# Print our vector
+print(v)
+
+# Subsetting by index
    v[c(1,2)]
-  # Subsetting by name
-  v[c("two","seven")]
-  # Subset all but some
+
+# Subsetting by name
+  v[c("two", "seven")]
+
+# Subset all but some (with exclusion operator)
   v[-c(1,2)]
-  # Subset using logicals
-  v[c(FALSE,TRUE,TRUE,FALSE)]
+
+# Subset using logicals
+  v[c(FALSE, TRUE, TRUE, FALSE)]
 ```
 
 ## 
@@ -377,9 +421,10 @@ Alternatively, one can name the vectors as follows:
 
 1. What happens if you swap the index? 
 2. What happens if you subset by the name not present, like `v[c("two","three")]`? 
-3. Does the "subseting some"" operation work with names? 
+3. Does the subsetting "all but some" operation work with names? 
 4. What happens if the logical vector has less elements than the orginal vector `v` (remember _recyling_)?
 <br>
+5. Find a way to access the last element of a vector.
 
 ##
 
@@ -407,7 +452,7 @@ Character strings are entered using either matching double `(")` or single `(’
 The `paste()` function takes an arbitrary number of arguments and concatenates them one by one into character strings. 
 
 ```{r eval=TRUE, warning=FALSE}
-  paste(c("X","Y"), "ab,b")
+  paste("Learning R is", c("fun", "tough"))
 ```
 
 ##
@@ -415,15 +460,15 @@ The `paste()` function takes an arbitrary number of arguments and concatenates t
 Note that by default the arguments are by default separated in the result by a single blank character, but this can be changed by the named argument, `sep=string`, which changes it to string, possibly empty. Thus,
 
 ```{r eval=TRUE, warning=FALSE}
-  paste(c("X","Y"), "ab,b", sep="")
+  paste("Learning R is", c("fun", "tough"), sep="...")
 ```
 
-will render the arguments together.
+will render the arguments together.  
 
 ##
 
 <br>
-<span style="color:blue">**Classwork/Homework**</span>: Play with the `sep` argument to include other type of delimiters (like comma etc.)
+<span style="color:blue">**Classwork/Homework**</span>: Check the `paste` function help page. What does `paste0()` do? What is the role of the `collapse` argument? Play with the `sep` argument to include other type of delimiters (like comma etc.)
 <br>
 
 ---
@@ -433,24 +478,23 @@ will render the arguments together.
 #### Basic objects and data types
 
 Vectors are the most important type of objects in R, but there are several other objects that we will encounter frequently.
+  
+  
+Here is a list of other important objects: 
 
-##### Objects
-
-Here is a list of other important objects. 
-
-* _matrices_ or more generally arrays are multi-dimensional generalizations of vectors. In fact, they are vectors that can be indexed by two or more indices and will be printed in special
+* **_matrices_** or more generally arrays are multi-dimensional generalizations of vectors. In fact, they are vectors that can be indexed by two or more indices and will be printed in special
 ways.
 
-* _factors_ provide compact ways to handle categorical data.
+* **_factors_** provide compact ways to handle categorical data.
 
 ##
 
-* _lists_ are a general form of vector in which the various elements need not be of the same type, and are often themselves vectors or lists. Lists provide a convenient way to return the
+* **_lists_** are a general form of vector in which the various elements need not be of the same type, and are often themselves vectors or lists. Lists provide a convenient way to return the
 results of a statistical computation.
 
-* _data frames_ are matrix-like structures, in which the columns can be of different types. One can think of data frames as ‘data matrices’ with one row per observational unit but with (possibly) both numerical and categorical variables. Many experiments are best described by data frames: the treatments are categorical but the response is numeric.
+* **_data frames_** are matrix-like structures, in which the columns can be of different types. One can think of data frames as ‘data matrices’ with one row per observational unit but with (possibly) both numerical and categorical variables. Many experiments are best described by data frames: the treatments are categorical but the response is numeric.
 
-* _functions_ are themselves objects in R which can be stored in the project’s workspace. This provides a simple and convenient way to extend R. 
+* **_functions_** are themselves objects in R which can be stored in the project’s workspace. This provides a simple and convenient way to extend R. 
 
 ##
 
@@ -470,29 +514,21 @@ The function `class()` can be used to reveal the data type. Basic data types are
 
 ##
 
-```{r eval=TRUE, warning=FALSE}
+```{r eval=TRUE, warning=FALSE, collapse=T}
   # Reveal the class of the logical "TRUE"
   class(TRUE)  
+  
+  # Reveal the class of the character "R data types rock, etc."
+  class("R data types rock, etc.")
+  
   # Reveal the class of the number 2.5
   class(2.5) 
   # Reveal the class of the number 2
-  class(2)  
-```
-
-##
-
-```{r eval=TRUE, warning=FALSE}
+  class(2)
   # Reveal the class of the integer 2L
   class(2L)
-  # Reveal the class of the character "R data types rock, etc."
-  class("R data types rock, etc.")
 ```
 
-<br>
-
-**Note 1**: By default an integer has a datatype as numeric as illustrated by `class(2)`
-
-**Note 2**: One can also use <code>is.<i>datatype(y)</i></code> to reveal the underlying datatype of the variable `y`. For example, `is.logical(x)` will return `TRUE` if `x` is a logical variable. Otherwise, it will return `FALSE`.
 
 ##
 
@@ -502,11 +538,12 @@ One can _force_ a data type to another through what is known as _coercion_.
 
 The function <code>as.<i>datatype(y)</i></code> will coerce the datatype of `y` into the specified datatype.
 
-```{r eval=TRUE, warning=FALSE}
+```{r eval=TRUE, warning=FALSE, collapse=TRUE}
   # Coerce "TRUE" into integer
   as.integer(TRUE)
   # Coerce "FALSE" into integer
   as.integer(FALSE)
+  
   # Coerce 2.5 as a character
   as.character(2.5)
   # Coerce 2 as a numeric
@@ -515,13 +552,20 @@ The function <code>as.<i>datatype(y)</i></code> will coerce the datatype of `y` 
   as.integer("4.5") 
 ```
 
-**Note**: There is an information loss when coercing non-integer values to integer values as revealed by the last example. Also, coercion is not always possible. For instance, coercing a charecter "hello" into numeric/integer will result in warning and `NA`.
+##
+
+<small>**Note**: There is an information loss when coercing non-integer values to integer values as revealed by the last example. Also, coercion is not always possible. For instance, coercing a charecter "hello" into numeric/integer will result in warning and `NA`.</small>
 
 ```{r eval=TRUE, warning=TRUE}
   as.numeric("hello")
 ```
 
----
+<br>
+<span style="color:blue">**Classwork/Homework**</span>: 
+
+Look for the help page of functions of the form <code>is.<<i>datatype</i>>(y)</code> , where `datatype` is one of the types we have just learned (like character, logical, etc.) and (y) is a variable name. Give an example for how you use it.
+
+##
 
 #### Matrices
 
@@ -552,9 +596,9 @@ We can paste rows or columns using the functions `cbind()` (for coumumn binding)
 
 ```{r eval=TRUE, warning=FALSE}
   # Combine as columns
-  cbind(1:3,1:3)
+  cbind(1:3, 1:3)
   # Combine as rows
-  rbind(1:3,1:3)
+  rbind(1:3, 1:3)
 ```
 
 ## 
@@ -566,7 +610,7 @@ Naming a matrix can be done using `rownames()` and `colnames()` functions, just 
 <br>
 <span style="color:blue">**Classwork/Homework**</span>: 
 
-1. What happens if the number of rows/coumns are more than the generated numbers when using the function `matrix()`?
+1. What happens if the number of rows/columns are more than the generated numbers when using the function `matrix()`?
 2. What happens in `cbind()` (and `rbind()`) if one of the columns (and rows) have more numbers than the other?
 3. Combine two matrices using `cbind()`.
 4. Can you "bind" two matrices of different data types? What happens when you do that?
@@ -576,15 +620,19 @@ Naming a matrix can be done using `rownames()` and `colnames()` functions, just 
 
 ##### Subsetting a matrix
 
-```{r eval=TRUE, warning=FALSE}
-  # Create a matrix
-  M <- matrix(1:9,nrow=3)
-  # Subsetting through indices
-  # Print the element in row 2 and column 3
+```{r eval=TRUE, warning=FALSE, collapse=TRUE}
+# Create a matrix
+  (M <- matrix(1:9, nrow=3))
+```
+Subsetting through indices
+```{r, collapse=TRUE}
+# Print the element in row 2 and column 3
   M[2,3]
-  # Print all the elements in column 2
+  
+# Print all the elements in column 2
   M[,2]
-  # Print all the elements in row 3
+  
+# Print all the elements in row 3
   M[3,]
 
 ```
@@ -593,7 +641,7 @@ Naming a matrix can be done using `rownames()` and `colnames()` functions, just 
 
 We can also subset multiple elements - to do this we use the combine function, `c()` along with index notation. 
 
-Thus, `M[2,c(2,3)]` will fetch all the elements in $2$nd row and in columns $2$ and $3$. 
+Thus, ` M[2, c(2,3)]` will fetch all the elements in $2$nd row and in columns $2$ and $3$. 
 
 Subseting also works through column names and row names and could be combined with indices. Further, subsetting works on logicals the same way it works for vectors.
 
@@ -622,18 +670,20 @@ How about matrix and vector operations? Recycling:
 
 ```{r eval=TRUE, warning=FALSE}
   # Create a matrix
-  M <- matrix(1:9,nrow=3)
+  M <- matrix(1:9, nrow=3)
   # Make a vector 
-  v <- c(10,20,25)
-  # Matirx minus the vector
+  v <- c(10, 20, 25)
+  # Matrix minus the vector
   M-v
 ```
 
+<br>
+The result is same as:  
+    `M - matrix(v, nrow=3, ncol=3)`
+
 ##
 
-**Note 1**: The result is same as `M - matrix(v, nrow=3, ncol=3)`. 
-
-Although recycling provides a convinient way to manipulate matrix-vector operations, it is important to use such expression with caution. 
+**Note 1**: Although recycling provides a convinient way to manipulate matrix-vector operations, it is important to use such expression with caution. 
 
 Whenever possible, try to convert the vector into matrix and work with matrices.
 
@@ -647,6 +697,24 @@ Whenever possible, try to convert the vector into matrix and work with matrices.
 
 ---
 
+##### Matrix inversion
+
+```{r}
+M1 <- matrix(c(1, 2, 3, 0, 1, 5, 5, 6, 0), ncol=3, byrow = T)
+
+det(M1)
+# Get the inverse of a matrix
+solve(M1)
+# Solve a simple system of Ax=b
+b <- c(4,0,3)
+solve(M1, b)
+
+```
+
+##
+
+
 #### Selected materials and references
 
-[An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf)
+[An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf)  
+[More about matrix arithmatic](https://www.statmethods.net/advstats/matrix.html)
