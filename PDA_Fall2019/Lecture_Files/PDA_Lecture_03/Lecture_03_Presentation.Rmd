@@ -1,6 +1,8 @@
 ---
 output:
-  revealjs::revealjs_presentation: null
+  revealjs::revealjs_presentation:
+    reveal_options:
+      slideNumber: 'c/t'
   pandoc_args:
   - --slide-level
   - '2'
@@ -147,10 +149,10 @@ Recall vectors and matrices can hold only one data type, like integer or charact
 ```{r eval=TRUE}
   # Defining different data type as vector
   # Note coercion takes place
-  vec <- c("Blood-sugar","High", 140, "Units", "mg/dL")
+  vec <- c("Blood-sugar", "High", 140, "Units", "mg/dL")
   vec
   # And as a list
-  lst <- list("Blood sugar","High", 140, "mg/dL")
+  lst <- list("Blood sugar", "High", 140, "mg/dL")
   lst
 ```
 
@@ -165,9 +167,9 @@ Naming a list can be done through the `names()` function or specifying it in the
 
 ```{r eval=TRUE}
   # Define list
-  lst <- list("Blood sugar","High", 140, "mg/dL")
+  lst <- list("Blood sugar", "High", 140, "mg/dL")
   # Assign names and print
-  names(lst) <- c("Fluid","Category","Value","Units")
+  names(lst) <- c("Fluid", "Category", "Value", "Units")
   lst
 ```
 
@@ -177,7 +179,7 @@ Or specify within the list
 
 ```{r eval=TRUE}
   # Specify within the list
-  list(Fluid="Blood sugar",Category="High", Value=140, Units="mg/dL")
+  list(Fluid="Blood sugar", Category="High", Value=140, Units="mg/dL")
   # For compact display use the str() function
   str(lst)
 ```  
