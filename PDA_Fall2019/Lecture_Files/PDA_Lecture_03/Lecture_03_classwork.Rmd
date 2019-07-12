@@ -1,0 +1,541 @@
+---
+# title: "Lecture 03"
+# author: "Kasthuri Kannan and Arnon Lieber"
+# date: '`r format(Sys.Date(), "%b %d, %y")`'
+output: html_document
+---
+
+
+### R fundamentals 02: Advanced data types (`r format(Sys.Date(), "%b %d, %y")`)
+
+
+---
+
+In this lecture we will consider other data types such as **Factors**, **Lists** and **Data Frames** 
+
+---
+
+#### Factors
+
+Factors are determined through categorical variables. What are categorical variables?
+
+* Limited number of differing values.
+* Belong to a certain category.
+* For statistical analysis, R calls them factors.
+
+##
+
+##### Creating and manipulating factors
+
+```{r eval=TRUE}
+  # Create a blood group vector
+  blood_group_vector <- c("AB", "O", "B+", "AB-", "O", "AB", "A", "A", "B", "AB-")
+  blood_group_vector
+```
+
+```{r eval=TRUE}
+  # Create fatcors from the vector
+  blood_group_factor <- factor(blood_group_vector)
+  blood_group_factor
+```
+  
+  
+**Note:**
+
+  1. The levels are sorted alphabetically. 
+  2. No more quotation marks.
+
+##
+
+R encodes factors to integers for easier memory access and computations. This is done alphabetically. For example, A is assigned 1, AB is assigned 2 etc. This can be viewed by invoking the `str()` function:
+
+```{r eval=TRUE, echo=TRUE}
+  # Show the structure of the blood group factor
+  str(blood_group_factor)
+```
+  
+<br>
+```{r results='hold'}
+print(blood_group_vector)
+paste(as.character(as.integer(blood_group_factor)), " ")
+```
+
+
+##
+
+This can be over-ridden by specifying the <span style="color:#990000">`levels`</span> argument for the `factor()` function.
+
+```{r eval=TRUE}
+  # Define another set of levels over-riding default
+  blood_group_factor2 <- factor(blood_group_vector, levels = c("A", "B", "B+", "AB", "AB-", "O"))
+  print(blood_group_factor2)
+  str(blood_group_factor2)
+```
+
+```{r collapse=TRUE}
+# Comparing the default alphabetic order with the new one:
+as.integer(blood_group_factor)
+as.integer(blood_group_factor2)
+```
+
+## 
+
+Renaming factors can be done using the `level()` function.
+
+```{r eval=TRUE}
+  # Define blood type
+  blood_type <- c("B", "A", "AB", "A", "O")
+  # Find the factors
+  blood_type_factor <- factor(blood_type)
+  blood_type_factor
+  # Rename the factors
+  levels(blood_type_factor) <- c("BT_A", "BT_AB", "BT_B", "BT_O")
+  blood_type_factor
+```
+
+
+##
+
+**Note**: It is **extremely important** to follow the **same order** as the default order supplied by R. Otherwise, the result can be extremely confusing as the following exercise will show.
+
+
+
+<br>
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>: Rename the blood_type_factor in the above example as follows: 
+
+<small>`levels(blood_type_factor) <- c("BT_A", "BT_B", "BT_AB", "BT_O")`</small>
+
+and justify the result of outputting `blood_type_factor`. Use `str()` to support your answer.
+
+---
+
+<br>
+
+
+If you want to safely rename your levels or to change their default order, it is always best to define the `labels` along with the `levels` like this -
+
+```{r eval=FALSE}
+  factor(blood_type_factor, levels=c("A", "B", "AB", "O"), 
+                            labels=c("BT_A", "BT_B", "BT_AB", "BT_O"))
+```
+
+<br>
+An easy and fast way to generate a simple factor with given number of repetitions is by the function `gl()`
+```{r, collapse=TRUE}
+factorZ <- gl(3, 2, length = 12)
+
+print(factorZ)
+```
+
+
+<br>
+
+##### Nominal vs. Ordinal factors
+
+_Nominal factors_: These are categorical variables that cannot be ordered, like blood group. For example, it doesn't make sense to say blood group A < blood group B.
+
+_Ordinal factors_: These are categorical variables that can be ordered. For instance, tumor sizes. We can say T1 (tumor size 2cm or smaller) < T2 (tumor size larger than 2cm but smaller than 5 cm).
+
+##
+
+R provides us with a way to impose order on factors. Simply use the argument `ordered=TRUE` inside the factor function.
+
+```{r eval=TRUE, collapse=F}
+  # Specify the tumor size vectore
+  tumor_size <- c("T1", "T1", "T2", "T3", "T1")
+  # Set the order by specifying "ordered=TRUE"
+  tumor_size_factor <- factor(tumor_size, ordered = TRUE,
+                              levels=c("T1", "T2", "T3"))
+  
+  # Print the results
+  tumor_size_factor
+  
+  # Compare one factor vs the other
+  tumor_size_factor[1] < tumor_size_factor[2]
+```
+
+##
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>: Use the inequality operator (< or >) on a **nominal** category and print the output.
+
+---
+
+<br>
+
+
+
+#### Lists
+
+Recall vectors and matrices can hold only one data type, like integer or character. Lists can hold multiple R objects, without having to perform coercion.
+
+##
+
+```{r eval=TRUE, collapse=T}
+  # Defining different data type as vector (Note, coercion takes place)
+  vec <- c("Blood-sugar", "High", 140, "mg/dL")
+  vec
+  
+```
+
+```{r eval=TRUE, collapse=T}
+  # And as a list
+  lst <- list("Blood-sugar", "High", 140, "mg/dL")
+  # One can use the is.list() function to see if something is a list
+  is.list(lst)
+   
+  lst
+```
+
+##
+
+```{r eval=TRUE}
+
+```
+
+Naming a list can be done through the `names()` function or specifying it in the list itself.
+
+```{r eval=TRUE, collapse=TRUE}
+  # Define a list
+  lst <- list("Blood sugar", "High", 140, "mg/dL")
+  # Assign names and print
+  names(lst) <- c("Fluid", "Category", "Value", "Units")
+  
+  print(lst)
+```
+
+##
+
+Or specify names directly while defining the list
+
+```{r eval=TRUE}
+  # Specify while constructing the list 
+  blood_test <- list(Fluid="Blood sugar", Category="High", Value=140, Units="mg/dL")
+  # For compact display use the str() function
+  str(blood_test)
+```  
+
+##
+
+**Note**: A list can contain another list, or any number of nested lists.
+
+##
+
+##### Aceesing and extending lists
+
+The difference between `[]` and `[[]]` is that, `[]` will return a list back and `[[]]` will return the elements in the list.
+
+```{r eval=TRUE, collapse=TRUE}
+
+  # Creating a list of patient's details containing the 'blood_test' list
+  patient <- list(Name="Mike", Age=36, Btest = blood_test)
+  
+  # Show the first element of the list
+  patient[1]
+  
+  class(patient[1])
+  
+  # Access the content of the first element
+  patient[[1]]
+  
+  class(patient[[1]])
+```
+  
+##
+  
+```{r, collapse=TRUE}
+
+  # Show the structure of the third element of the list
+  str(patient[3])
+  
+  # Show the structure of the content of the third element (which in this case is a list by itself)
+  str(patient[[3]])
+```
+
+
+<br>
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>: 
+
+1. What does `patient[c(1,3)]` give us? Is it a list or elements?
+2. What does `patient[[c(1,3)]]` give us? Is it a list or elements? 
+3. How about `patient[[c(3,1)]]`? What is the difference?  
+( _Hint_: `patient[[c(1,3)]]` is same as `patient[[1]][[3]]`).
+
+---
+
+<br>
+
+##
+
+Subsetting by names is super easy: just supply the name within brackets. For example, `patient["Name"]` or `patient[["Name"]]`. 
+
+Subsetting by logicals will work only for returning elements of the list. For instance, `patient[c(TRUE,FALSE)]`. 
+
+It doesn't make sense to return the elements through logicals, i.e., `patient[[c(TRUE,FALSE)]]`.
+
+##
+
+Another cool way to access elements (just the same as using `[[]]`) is the use of `$` sign. 
+
+However, to do this, the list should be named. For example, `patient$Name` will print the patient name.
+
+```{r collapse=TRUE}
+class(patient$Name)
+```
+
+
+`$` sign can also be used for extending lists:
+
+```{r eval=FALSE}
+  # Extend the list to include gender
+  patient$Gender <- "Male"
+  # This is same as using double brackets
+  patient[["Gender"]] <- "Male"
+  # Extend the blood test list to include the date of the test
+  patient$Btest$Date <- "Sept.14"
+```
+
+
+##
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>: How do you remove an element from a list?
+
+---
+
+<br>
+
+#### Data frames
+
+Datasets come with various shapes and sizes. Usually they constitute:
+
+* Observations (eg. each row is an observation)
+* Variables (eg. each column is a variable)
+
+
+Limitations of other data types:
+
+* Matrices consist of only one data type
+* Working with lists is not practical 
+
+##
+
+Data frames can contain different values for each observation/row; however, each variable (or a column) should have the same data type. 
+
+Usually data frames are imported - through CSV, or Excel etc. However, we can create a data frame as well.
+
+```{r eval=TRUE}
+  # Create name, age and logical vectors
+  name <- c("Anne", "James", "Mike", "Betty")
+  age <- c(20, 43, 27, 25)
+  cancer <- c(TRUE, FALSE, FALSE, TRUE)
+  # Form a data frame
+  df <- data.frame(name, age, cancer)
+  df
+```
+
+##
+
+Update the `names` attribute
+
+```{r eval=TRUE}
+  # (the same way like we did for vectors)
+  names(df) <- c("Name", "Age", "Cancer_Status")
+  attributes(df)
+  # Or specify directly while creating the data frame
+  df <- data.frame(Name=name, Age=age, Cancer_Status=cancer)
+  df
+```
+
+##
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>: 
+
+1. Examine the structure of the data frame.
+2. What happens if one of the vectors has an unequal length?
+
+---
+
+<br>
+
+##
+
+**Note**: Data frames store character vectors as factors. You can override this as follows: 
+```{r, eval=F}
+df <- data.frame(Name=name, Age=age, Cancer_Status=cancer, 
+                 stringsAsFactors = FALSE)
+```
+ 
+
+
+##
+
+##### Manipulating data frames: **Subsetting**
+
+```{r eval=TRUE}
+  print(df)
+```
+
+We can subset by indices:
+
+```{r eval=TRUE, collapse=T}
+# Subsetting by indices - works just like matrices
+  df[1,2]
+
+# Get the entire row/column - just like matrices
+  # Get the second row
+  df[2,]
+
+```
+
+##
+
+We can also subset using the names as well as indices:
+
+```{r eval=TRUE, collapse=T}
+# Get the "cancer" column
+  df[,"Cancer_Status"]  
+
+# One can use column names as well
+  df[1, "Age"]
+
+# Get all 2nd and 3rd observation with "name"" and "cancer"" status
+  df[c(2,3), c("Name", "Cancer_Status")]
+```  
+
+<br><small>
+The main difference in subsetting a data.frame versus a matrix is when you specify a single number as index within `[]`. For matrices you get **an element** corresponding to the linear index but for a data frame we'll get the **column vector** that corresponds to the index. </small>
+
+##
+
+An example:
+```{r eval=TRUE}
+# Print the class (of the values) of the second column
+class(df[,2])
+
+# Class of the retrieved element, using a single bracket
+class(df[2])
+```
+
+<br>
+This is because data frames are made up of lists of vectors of equal length. Thus, single `[2]` will correspond to the second element in the list, which is a _vector_ of ages.
+
+##
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>: Test the operations of lists (like `["age"] & [["age"]]`) on data frames.
+
+---
+
+<br>
+
+##
+
+##### Manipulating data frames: **Extending**
+
+Adding a column is super easy. Since data frames are a list of vectors one can just append a vector to the list. 
+
+For instance, if we have a column of tumor size info like this for each patient: `c("T0","T3","T2","T0")`, the following code will append the vector.
+
+```{r eval=TRUE}
+  # Append tumor size vector
+  df$Tumor_size <- c("T3", "T0", "T0", "T2")
+  df
+```
+
+##
+
+<br>
+<span style="color:blue">**Classwork/Homework**</span>: 
+
+1. Use `cbind()` to append a vector of choice.
+2. What happens if the length of the appending vector is greater than (or less than) row dimensions?
+
+---
+
+<br>
+
+##
+
+In contrast, extending a row (or observation) is not straight-forward. This is because observations may contain different data types. To add observations, make a new data frame and append:
+
+```{r eval=TRUE}
+  # Create a data frame (pay attention to the capital letters at the variable names!)
+  tom <- data.frame(Name="Tom", Age=47, Cancer_Status="TRUE", Tumor_size="T2")
+  # And append
+  df <- rbind(df, tom)
+  df
+```  
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>:
+
+1. Can you use the `list()` function instead of the data frame function in the above code?
+2. What happens if you leave the arguments `name=`, `age=` etc. in the above code?
+3. Check out the function `expand.grid()`, what is it for?  
+   Try out the following example and think when it is useful.
+
+
+```{r eval=F}
+expand.grid(height = as.character(seq(60, 70, 5)), weight = seq(100, 200, 50),
+            sex = c("Male","Female"), stringsAsFactors = FALSE)
+```
+
+---
+
+<br>
+
+##### Manipulating data frames: **Sorting**
+
+We can use the `order()` function to sort the entire data frame with respect to a particular column.
+
+```{r eval=TRUE, collapse=TRUE}
+  # Rank the entries of a column, say "Age"
+  ranks <- order(df$Age)
+  
+  # `ranks` is a vector of indexes
+  print(ranks)
+  
+  # Sort the data frame according to the rank
+  df[ranks,]
+  
+```
+
+##
+
+---
+
+<span style="color:blue">**Classwork/Homework**</span>:
+
+1. Why does `sort(df$age)` return an error?
+2. When you fix the problem, what does the command perform and how is it related to the ranks?
+3. Sort the entries in descending order of the age. _(Hint: Question the function to find out more about the function in question)_.
+
+
+<br>
+
+#### Selected materials and references
+
+[An Introduction to R - Chapter 6](https://cran.r-project.org/doc/manuals/R-intro.pdf)  
+[R Tutorial-List](http://www.r-tutor.com/r-introduction/list)  
+
+---
+
+In the next lecture we will learn about **graphics** in R.
+
+
+---
+  
+
