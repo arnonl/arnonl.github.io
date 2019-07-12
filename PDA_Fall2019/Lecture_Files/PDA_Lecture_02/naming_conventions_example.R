@@ -44,7 +44,7 @@ rm(r, ber8)
 ls()
 
 rm
-
+rm(list=ls())
 
 seq(to=37, from=1)
 
