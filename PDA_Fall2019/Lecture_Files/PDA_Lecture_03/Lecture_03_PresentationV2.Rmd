@@ -108,7 +108,7 @@ as.integer(blood_group_factor2)
 
 ## 
 
-Renaming factors can be done using the `level()` function.
+Renaming factors can be done using the `levels()` function.
 
 ```{r eval=TRUE}
   # Define blood type
