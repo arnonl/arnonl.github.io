@@ -1,46 +1,28 @@
 ---
-output:
-  revealjs::revealjs_presentation:
-    reveal_options:
-      slideNumber: 'c/t'
-  pandoc_args:
-  - --slide-level
-  - '2'
+# title: "Lecture 04"
+# author: "Dr Kasthuri Kannan and Dr Arnon Lieber"
+# date: "Jul 19, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 ---
 
-<style type="text/css">
-p { text-align: left; }
-</style>
-
-<style>
-    .reveal code {
-    	  background-color: #f5f5f5;	/* code bg color*/
-    }
-    .reveal .slides {
-        text-align: left;
-    }
-    .reveal .slides section>* {
-        margin-left: 0;
-        margin-right: 0;
-    }
-    
-    .reveal .slide-number {
-    font-size: 24pt;
-    color: #ffffff;
-</style>
-
-
-### R fundamentals 03: Elements of programming  
-(`r format(Sys.Date(), "%b %d, %y")`)
+### R fundamentals 04: Elements of programming and basic debugging skills  
+### (`r format(Sys.Date(), "%b %d, %y")`)
 
 ---
 
-As the last part of R fundamentals series, we will study elements of R programming.
+As the last part of R fundamentals series, we will study elements of R programming
 
 ---
 
 #### Conditional statements and operators in R
+
+<br>
 
 R provides syntax to evaluate conditions. 
 
@@ -61,14 +43,14 @@ As an example,
   }
 ```
 
-##
 
-<br>
+----
+
 <span style="color:blue">**Classwork/Homework**</span>: Change x to 5 and re-run the above code. What does that print?
 
-<br>
+---
 
-##
+<br>
 
 `if...else` statements are evaluated thus:
 
@@ -81,12 +63,13 @@ As an example,
 ```
 
 
-<br>
+----
+
 <span style="color:blue">**Classwork/Homework**</span>: Repeat the previous classwork, this time adding an _else statement_ that prints "x is positive or zero", when needed.
 
-<br>
+---
 
-##
+<br>
 
 We can also make `else if` statements as follows:
 
@@ -101,15 +84,13 @@ We can also make `else if` statements as follows:
   }
 ```
 
-##
+<br>
 
 R provides logical operators:
 
-* AND with symbol&nbsp;&nbsp;&
-* OR with symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
-* NOT with symbol&nbsp;&nbsp;&nbsp;!
-
-
+* AND with symbol&nbsp;&nbsp;&nbsp;`&`
+* OR with symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`|`
+* NOT with symbol&nbsp;&nbsp;&nbsp;`!`
 
 <br>
 
@@ -125,7 +106,6 @@ The **AND** truth table
 
 Example: `x <- 5` and `(x >3) & (x <8)` will evaluate to `TRUE`.
 
-##
 
 The **OR** truth table
 
@@ -137,9 +117,7 @@ The **OR** truth table
   FALSE | FALSE  : FALSE
 ```
 
-Example: `x <- 5` and `(x >5) | (x <8)` will evaluate to `TRUE`.
-
-##
+Example: `x <- 5` and `(x >5) | (x <8)` will evaluate to `FALSE`.
 
 The **NOT** truth table
 
@@ -149,17 +127,18 @@ The **NOT** truth table
   !FALSE : TRUE
 ```
 
-Example:  `x <- 5` and `!((x >5) | (x <8))` will evaluate to `FALSE`.
+Example:  `x <- 5` and `!((x >5) | (x <8))` will evaluate to `TRUE`.
 
-##
 
-<br>
+----
+
 <span style="color:blue">**Classwork/Homework**</span>: Create an R script that returns the max value of a vector `x` with length 3. Don’t use the aid of an auxiliary variable.
+
+---
+
 <br>
 
-##
-
-**Note**: R comes out of the `if-else` section as soon as the condition is met. It will **not** evaluate further conditions down the line even if they satisfy.
+**Note**: R comes out of the _if statement_ as soon as the condition is met. It will **not** evaluate further conditions down the line even if they satisfy.
 
 ```{r eval=TRUE}
   # Assign x to 6
@@ -175,7 +154,7 @@ Example:  `x <- 5` and `!((x >5) | (x <8))` will evaluate to `FALSE`.
   }
 ```
 
-##
+<br>
 
 We can apply logical operators on vectors and matrices - works element wise:
 
@@ -183,19 +162,15 @@ We can apply logical operators on vectors and matrices - works element wise:
 
 `c(TRUE,TRUE,FALSE) | c(FALSE,TRUE,TRUE)` will evaluate to `TRUE TRUE TRUE`.
 
-##
-
 Also, we have `&&` and `||` operators in R. The difference between single `&`and `&&`is that, `&&` will only look at the first elements of the vectors. Similarly for `||`. Thus,
 
 `c(TRUE,TRUE,FALSE) && c(FALSE,TRUE,TRUE)` will evaluate to `FALSE` and 
 
-`c(TRUE,TRUE,FALSE) || c(FALSE,TRUE,TRUE)` will evaluate to `TRUE`.
-
-##
+`c(TRUE,TRUE,FALSE) | c(FALSE,TRUE,TRUE)` will evaluate to `TRUE`.
 
 We can check two objects are equal by the `==` sign or inequality using `!=` operator. 
 
-```{r eval=FALSE, echo=TRUE}
+```{r eval=TRUE}
   # Check the quality of logical objects
   TRUE == TRUE
   # Check the quality of logical objects
@@ -207,34 +182,19 @@ We can check two objects are equal by the `==` sign or inequality using `!=` ope
   # Check inequlaity
   2 != 3
 ```
-
-```{r eval=TRUE, echo=FALSE}
-  # Check the quality of logical objects
-  TRUE == TRUE
-  # Check the quality of logical objects
-  TRUE == FALSE
-  # Compare strings
-  "hi" == "hello"
-  # Or numbers
-  2 == 2
-  # Check inequlaity
-  2 != 3
-```
-
-##
 
 In fact, we can use comparison operators for objects!
 
 ```{r eval=TRUE}
   # Use comparison on objects
   "hello" >= "goodbye"
-  
   # How about on logicals?
   TRUE < FALSE
 ```
 
+Why is the comparison `TRUE < FALSE` evaluates to `FALSE` despite the fact that `T < F` in R? Becuase logicals are _coerced_. `TRUE` coresponds to 1 and `FALSE` to 0. We can also use comparison operators on vectors.
 
-##
+<br>
 
 Here are two other useful functions to evaluate logical vectors: `any()` and `all()`.
 
@@ -242,18 +202,6 @@ Here are two other useful functions to evaluate logical vectors: `any()` and `al
 it is enough that there is one TRUE to return TRUE  
 `all()` is comparable to AND;  
 it is enough that there is one FALSE to return FALSE  
-
-Example:
-```{r}
-# Are any of the values TRUE?
-any(c(FALSE, FALSE, TRUE, FALSE))
-# Are all of the values TRUE?
-all(c(TRUE, TRUE, TRUE, FALSE))
-
-```
-
-
-##
 
 The inclusion operator `%in%` , search for an element within a vector:
 ```{r, collapse=T}
@@ -267,11 +215,10 @@ bacFamVec <- c("Cyclobacteriaceae", "Leuconostocaceae",
 ( "Clostridiaceae" %in% bacFamVec )
 ```
 
-Using the resulted logical vector allows us to extract the values or indeces of elements
-
 ##
 
-<br>
+----
+
 <span style="color:blue">**Classwork/Homework**</span>: 
 
 1. Compare two vectors of equal length and output the result.
@@ -279,38 +226,22 @@ Using the resulted logical vector allows us to extract the values or indeces of 
 3. Compare two matrices and lists and explain how R handles such comparisons.
 4. Explore further the example of the "inclusion operator", does it matter if you reverse the order of the compared elements? If yes, what the difference is? 
 
+---
+
 <br>
 
-
-
-##
-
-#### Functions in R
-
-<br> 
-
-Why do we need functions?
-
-* Functions save us the tadious typing of the same text for repeated operation
-* Functions make code cleaner and easier to read   
-* Functions save us the need to repeat challanges that we have solved already
-* Functions improve the memory efficiency of the code 
-
-##
-
+#### Functions and data structures in R
 
 The general syntax of a function:
 
 ```{r eval=FALSE}
   
   my_function <- function(arg 1, arg 2) {
-    body of the function
+    <body of the function>
   }
 ```
 
-Unlike some other languages, in R, there is no special syntax for naming a function. One just defines like any other variable 
-
-##
+Unlike some other languages, in R, there is no special syntax for naming a function. One just defines like any other vector. 
 
 Consider a simple function,
 
@@ -321,15 +252,9 @@ Consider a simple function,
   }
 ```
 
-If y is not given any value, it will take the default argument. 
+If y is not given any value, it will take the default argument. There is no difference between the functions we define and R supplied functions. There are three components for every function, the **formal**, the **body** and the **environment**.
 
-There is no difference between the functions we define and R supplied functions. 
-
-##
-
-There are three components for every function, the formal, the body and the environment.
-
-```{r eval=FALSE, echo=TRUE}
+```{r eval=TRUE}
   # The add function
   add <- function(x, y=1) {
     x+y
@@ -343,52 +268,16 @@ There are three components for every function, the formal, the body and the envi
   environment(add)
 ```
 
-```{r eval=TRUE, echo=FALSE}
-  # The add function
-  add <- function(x, y=1) {
-    x+y
-  }
-  
-  # Print the formals arguments
-  formals(add)
-  # Print the body 
-  body(add)
-  # Print the environment
-  environment(add)
-```
-
-##
-
-Environment is typically invisible, but it is important on how the function behaves. 
-
-We will soon see scope for functions. 
-
-In this case the environment is the global environment.
-
-##
-
-How do we use (call) our function?
-```{r eval=TRUE, echo=TRUE}
-  # Defining the function "add"
-  add <- function(x, y=1) {
-    x+y
-  }
-
-  # Main code
-  add(8)
-  # Or 
-  add(8,2)
-```
+Environment is typically invisible, but it is important on how the function behaves. We will soon see scope for functions. In this case the environment is the global environment.
 
 
-##
+---
 
-<br>
 <span style="color:blue">**Classwork/Homework**</span>: What does this function do?
 
 ```{r eval=FALSE}
   f <- function(x) {
-          if (x < 0) {
+          if (x<0) {
               -x
           } else {
                x
@@ -396,20 +285,15 @@ How do we use (call) our function?
         }
 ```
 
+---
+
 <br>
 
-##
 
-Functions are just objects in R and act like any other object. 
+Functions are just objects in R and act like any other object. You can assign a function to any other object and the object will behave exactly like the assigned function. Function need not have any name - they are called anonymous functions. Anonymous functions has to be called in one line. For example, `(function (x) {x+1})(2)` is an increment function that will produce the output 3.  
 
-You can assign a function to any other object and the object will behave exactly like the assigned function. 
-
-Function need not have any name - they are called anonymous functions. 
-
-Anonymous functions has to be called in one line. For example, `(function (x) {x+1})(2)` is an increment function that will produce the output 3.
-
-##
-
+<br>
+  
 ##### Scoping
 
 R looks into the function scope for values.
@@ -427,8 +311,6 @@ R looks into the function scope for values.
   f()
 ```
 
-##
-
 If the value is not in the scope, it looks one level above.
 
 ```{r eval=TRUE}
@@ -444,15 +326,28 @@ If the value is not in the scope, it looks one level above.
   f()
 ```
 
-##
 
-<br>
+----
+
 <span style="color:blue">**Classwork/Homework**</span>: Use `rm(x)` in the above code to remove x from the global environment and report what happens when you call the function.
 
+---
+
 <br>
 
+Scoping defines _where_ and not _when_ to look for a function. 
 
-##
+```{r eval=TRUE}
+  # Define a function
+  f <- function() x
+  x <- 15
+  f()
+  x <- 20
+  f()
+```
+
+
+This is a highly undersirable behaviour. So always as a practice design functions using the variables you'll use and not leave it to the environment. 
 
 Lookup works the same for functions when it comes to scoping.
 
@@ -461,15 +356,22 @@ Lookup works the same for functions when it comes to scoping.
   l <- function(x) x + 20
   # Define another function and define l inside f
   f <- function() {
-        l <- function(x) x + 15
+        l <- function(x) x +15
         l(20)
   }
   f()
 
 ```
 
+If you use name like a function, R ignores any non-function objects when it looks it up. Here is an example:
 
-##
+```{r eval=TRUE}
+  # Define c
+  c <- 20
+  # Use c as a combine 
+  # R ignores the function aspect of c
+  c(c=c)
+```
 
 Each call to a function has its own clean environment.
 
@@ -486,59 +388,43 @@ Each call to a function has its own clean environment.
  f()
 ```
 
-###### The environment of a function is cleared at the end of each call.
-###### By default, a function returns to the calling environment the value of the variable referred last.
-###### Therefore, every call of this function is going to print only 10!
 
-##
+The environment of a function is cleared at the end of each call.
+By default, function returns to the calling environment the value of the variable referred last.
+Therefore, every call of this function is going to print only 10!
 
-<span style="color:blue">**Classwork/Homework**</span>  
-How do we get to advance **`a`** in **1** at each call?
+----
 
-##
+<span style="color:blue">**Classwork/Homework**</span> How do we get to advance **a** in **1** at each call?
 
-```{r include=F}
-# ### A note on data structures:  
-# 
-# **Atomic vectors** are of six types: logical, integer, double, character, complex and raw.
-# 
-# **Linked lists** aka lists are like vectors but can hold multiple data types. Lists can also contain lists.
-# 
-# Every data structure has two key properties. The `typeof()` function that specifies the type of the data structure and `length()` function that gives the length of the data structure.
-```
+---
 
+<br>
 
-Another important object in R is the `NULL` that specifies the absence of elements in a data structure. Compare this with `NA` that specifies the absense of values in a data structure. 
+##### A note on the NULL value 
 
-This can be seen as follows:
+Another important object in R is the `NULL` that specifies the absence of elements in a data structure.
 
-```{r eval=TRUE, echo=TRUE, collapse=T}
+Every data structure has two key properties. The `typeof()` function that specifies the type of the data structure and `length()` function that gives the length of the data structure.
+
+Let's use it to compare `NULL` with `NA` that specifies the absense of values in a data structure. This can be seen as follows:
+
+```{r eveal=TRUE}
   # Find the type and length of NULL
   typeof(NULL)
   length(NULL)
-  
   # Find the type and length of NA
   typeof(NA)
   length(NA)
 ```
 
-##
-
 **Quiz**: How do you test for `NA` in a vector?
 
-In fact there are many types of `NA` depending on the data type, one for each atomic type (like `NA` for integer etc.). 
+In fact there are many types of `NA` depending on the data type, one for each atomic type (like `NA` for integer etc.). Missing values are contagious - any mathematical operation involving `NA` will result in NA. Any logical comparison involving `NA` will result in `NA` too (like `NA == NA`).
 
-Missing values are contagious - any mathematical operation involving `NA` will result in NA. 
-
-Any logical comparison involving `NA` will result in `NA` too (like `NA == NA`).
-
-##
-
-### Questions?
 
 ---
 
 #### Selected materials and references
 
-* [An Introduction to R (pg. 40)](https://cran.r-project.org/doc/manuals/R-intro.pdf) 
-* [knitr package options](https://yihui.name/knitr/options/) and more
+* [An Introduction to R (pg. 40)](https://cran.r-project.org/doc/manuals/R-intro.pdf)
