@@ -1,6 +1,8 @@
 ---
 output:
-  revealjs::revealjs_presentation: null
+  revealjs::revealjs_presentation:
+    reveal_options:
+      slideNumber: 'c/t'
   pandoc_args:
   - --slide-level
   - '2'
@@ -12,6 +14,9 @@ p { text-align: left; }
 </style>
 
 <style>
+    .reveal code {
+    	  background-color: #f5f5f5;	/* code bg color*/
+    }
     .reveal .slides {
         text-align: left;
     }
@@ -19,14 +24,13 @@ p { text-align: left; }
         margin-left: 0;
         margin-right: 0;
     }
-    
     .reveal .slide-number {
     font-size: 24pt;
     color: #ffffff;
 </style>
 
 
-### Data science fundamentals 01: Visualize and explore  (Aug., 2018)
+### Data science fundamentals 01: Visualize and explore  (`r format(Sys.Date(), "%b %d, %y")`)
 
 ---
 
@@ -45,7 +49,16 @@ Modeling is important too but we will explore it later.
 <br>
 <span style="color:blue">**Classwork/Homework**</span>: Get familiar with HANES and MIMIC3 data sets - we will be extensively using them.
 
----
+##
+
+#### The Graphics package _ggplot2_
+
+Packages are extentions of R's basic features  
+
+
+We load a pakage using the `library()` or `require()`
+
+##
 
 #### Prerequisites
 
@@ -98,7 +111,7 @@ We will first import the curated HANES data set in RStudio:
 
 ##
 
-```{r eval=TRUE, message=FALSE, echo=FALSE}
+```{r loadHANES, eval=TRUE, message=FALSE, echo=FALSE}
   # Load the package RCurl
   library(RCurl)
   # Import the HANES data set from GitHub; break the string into two for readability
@@ -124,7 +137,15 @@ We will first import the curated HANES data set in RStudio:
 
 ##
 
-We create a `ggplot` as follows:
+With ggplot2, we generate a graphics object using the function `ggplot()`. `ggplot()` creates a coordinate system that we can add layers to. 
+
+The first argument of `ggplot()` is the dataset to use in the graph. So `ggplot(data = HANES)` creates an empty graph.
+
+Next, we add one or more layers to `ggplot()`. 
+
+##
+
+We create a `ggplot` object as follows:
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
   # Load the tidyverse library
@@ -133,6 +154,12 @@ We create a `ggplot` as follows:
   ggplot(data = HANES) + 
   geom_point(mapping = aes(x = log(A1C), y = log(UACR)))
 ```
+
+<br> 
+
+ggplot2 comes with many geom functions that each add a different type of layer to a plot.
+
+The function `geom_point()` adds a layer of points to the plot, which creates a scatterplot. 
 
 ##
 
@@ -144,27 +171,6 @@ We create a `ggplot` as follows:
   geom_point(mapping = aes(x = log(A1C), y = log(UACR)))
 ```
 
-##
-
-With ggplot2, we plot with the function `ggplot()`. `ggplot()` creates a coordinate system that we can add layers to. 
-
-The first argument of `ggplot()` is the dataset to use in the graph. So `ggplot(data = HANES)` creates an empty graph.
-
-We add one or more layers to `ggplot()`. 
-
-The function `geom_point()` adds a layer of points to the plot, which creates a scatterplot. 
-
-ggplot2 comes with many geom functions that each add a different type of layer to a plot.  
-
-##
-
-Each geom function in ggplot2 takes a mapping argument. 
-
-This defines how variables in our dataset are mapped to visual properties. 
-
-The mapping argument is always paired with `aes()`, and the x and y arguments of `aes()` specify which variables to map to the x and y axes. 
-
-ggplot2 looks for the mapped variable in the data argument, in this case, HANES.
 
 ##
 
@@ -172,8 +178,16 @@ The general graphing template is given by
 
 ```{r eval=FALSE}
   ggplot(data = <DATA>) + 
-  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+    <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
 ```
+
+Each geom function in ggplot2 takes a mapping argument. 
+
+This defines how variables in our dataset are mapped to visual properties. 
+
+The mapping argument is always paired with `aes()`, and the x and y arguments of `aes()` specify which variables to map to the x and y axes. 
+
+`ggplot()` looks for the mapped variable in the _data_ argument.
 
 ##
 
@@ -187,19 +201,25 @@ The general graphing template is given by
 
 ---
 
-#### Aesthetic mappings
-
-We can add a third variable, like DX_DBTS, to a two dimensional scatterplot by mapping it to an **aesthetic**. 
+#### Aesthetic Mappings
 
 An aesthetic is a visual property of the objects in the plot. 
 
-Aesthetics include things like the size, the shape, or the color of the points. 
+Aesthetics include things like the **size**, the **shape**, or the **color** of the points. 
 
-We can display a point in different ways by changing the values of its aesthetic properties. 
+We can display a point in different ways by changing the values (the keyword) of its aesthetic properties.    
+  
+Aesthetics / Scales:
 
-We can convey information about the data by mapping the aesthetics in the plot to the variables in HANES dataset. 
+```{r out.width = "50%", echo=FALSE}
+library(png)
+knitr::include_graphics("scalesExample.png")
+```
+
 
 ##
+
+We can convey information about the data by mapping the aesthetics in the plot to the variables in HANES dataset.  
 
 For example, we can map the colors of our points to the DX_DBTS variable to reveal the diabetes status of each person.
 
@@ -209,6 +229,10 @@ For example, we can map the colors of our points to the DX_DBTS variable to reve
   geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=DX_DBTS))
 ```
 
+ggplot2 will automatically assign a unique level of the aesthetic (here a unique color) to each unique value of the variable, a process known as _scaling_. 
+
+ggplot2 will also add a legend that explains which levels correspond to which values.
+
 ##
 
 ```{r eval=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
@@ -219,31 +243,19 @@ For example, we can map the colors of our points to the DX_DBTS variable to reve
 
 ##
 
-To map an aesthetic to a variable, associate the name of the aesthetic to the name of the variable inside `aes()`. 
-
-ggplot2 will automatically assign a unique level of the aesthetic (here a unique color) to each unique value of the variable, a process known as _scaling_. 
-
-ggplot2 will also add a legend that explains which levels correspond to which values.
-
-The colors reveal many things about this data set. 
-
-We see that the two clusters are entirely made up of people who don't have diabetes. More, importantly, it reveals people who are diagnosed with diabetes or have one, but not diagnosed. 
+In the above example, we mapped DX_DBTS to the color aesthetic, but we could have mapped AGEGROUP to the size aesthetic in the same way. 
 
 ##
 
-In the above example, we mapped DX_DBTS to the color aesthetic, but we could have mapped AGEGROUP to the size aesthetic in the same way. 
+```{r eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
+  # Make a ggplot with asthetic size for the variable DX_DBTS
+  ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR), size=AGEGROUP))
+```
 
 In this case, the exact size of each point would reveal its AGEGROUP affiliation. 
 
-We get a warning here, because mapping an unordered variable (AGEGROUP) to an ordered aesthetic (size) is not a good idea.
-
-##
-
-```{r eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
-  # Make a ggplot with asthetic size for the variable DX_DBTS
-  ggplot(data = HANES) + 
-  geom_point(mapping = aes(x = log(A1C), y = log(UACR), size=AGEGROUP))
-```
+We will get a warning here, because mapping an unordered variable (AGEGROUP) to an ordered aesthetic (size) is not a good idea.
 
 ##
 
@@ -255,21 +267,44 @@ We get a warning here, because mapping an unordered variable (AGEGROUP) to an or
 
 ##
 
-Or we could have mapped DX_DBTS to the alpha aesthetic, which controls the transparency of the points: 
+```{r eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
+  # Make a ggplot with asthetic size for the variable DX_DBTS
+  ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR), 
+                           size = AGEGROUP, alpha = AGEGROUP))
+```
+
+<br>
+
+Here we also added a mapping of AGEGROUP to the alpha aesthetic, which controls the transparency of the points.
+
+##
+
+```{r eval=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+  # Make a ggplot with asthetic size for the variable DX_DBTS
+  ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR), 
+                           size = AGEGROUP, alpha = AGEGROUP))
+```
+
+##
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, echo=TRUE}
-  # Make a ggplot with asthetic alpha for the variable DX_DBTS
+  # Make a ggplot with asthetic size for the variable DX_DBTS
   ggplot(data = HANES) + 
-  geom_point(mapping = aes(x = log(A1C), y = log(UACR), alpha=DX_DBTS))
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR), 
+                           size = AGEGROUP, alpha=reorder(AGEGROUP, desc(AGEGROUP))))
 ```
 
 ##
 
 ```{r eval=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
-  # Make a ggplot with asthetic alpha for the variable DX_DBTS
+  # Make a ggplot with asthetic size for the variable DX_DBTS
   ggplot(data = HANES) + 
-  geom_point(mapping = aes(x = log(A1C), y = log(UACR), alpha=DX_DBTS))
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR), 
+                           size = AGEGROUP, alpha=reorder(AGEGROUP, desc(AGEGROUP))))
 ```
+
 
 ##
 
@@ -281,6 +316,8 @@ or the shape of the points:
   geom_point(mapping = aes(x = log(A1C), y = log(UACR), shape=DX_DBTS))
 ```
 
+**Note**: ggplot2 will only use six shapes at a time. By default, additional groups will go unplotted when we use the shape aesthetic.
+
 ##
 
 ```{r eval=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
@@ -291,7 +328,7 @@ or the shape of the points:
 
 ##
 
-**Note**: ggplot2 will only use six shapes at a time. By default, additional groups will go unplotted when we use the shape aesthetic.
+#### **Intermediate Summary**
 
 For each aesthetic, we use `aes()` to associate the name of the aesthetic with a variable to display. 
 
@@ -429,13 +466,9 @@ We see that both males and females have almost the same distribution. However, p
 
 ##
 
-reveals,there are hardly people with diabetes in the age group 20-39, while there are lots of them with no diabetes who have small UACR values. 
+At first glance one might conclude that there are hardly people with diabetes in the age group 20-39, while there are many more people who get diabetes as they age. 
 
-##
-
-However, inspecting the age group 60+, we see plenty of them with diabetes and the population with no diabetes and small UACR values had seem to diminish, suggesting, low UACR may contribute to diabetes more than A1C. 
-
-This is an example of **directed insight** obtained through visualization. 
+This is an example of **directed insight** obtained through visualization. But is it true? 
 
 ##
 
@@ -482,16 +515,15 @@ How are these two plots similar?
 
 ##
 
-```{r eval=TRUE, message=FALSE, warning=FALSE, echo=FALSE}
+```{r eval=TRUE, message=FALSE, warning=FALSE, echo=FALSE, fig.height=3.5}
   # Plot UCREATININE vs UALBUMIN, coloring GENDER
   ggplot(data = HANES) + 
     geom_point(mapping = aes(x = UCREATININE, y = UALBUMIN, color=GENDER)) + 
     xlim(c(0,100)) + ylim(c(0,10))
 ```
 
-##
 
-```{r eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE}
+```{r eval=TRUE, warning=FALSE, message=FALSE, echo=FALSE, fig.height=3.5}
   # Smooth UCREATININE vs UALBUMIN, coloring GENDER
   ggplot(data = HANES) + 
     geom_smooth(mapping = aes(x = UCREATININE, y = UALBUMIN, color=GENDER)) + 
@@ -518,7 +550,7 @@ Scatterplots break the trend; they use the point geom.
 
 We can use different geoms to plot the same data. 
 
-The plot on top uses the point geom, and the plot in the bottom uses the smooth geom, a smooth line fitted to the data.
+The plot on top uses the `geom_point`, and the plot in the bottom uses the `geom_smooth`, a smooth line fitted to the data.
 
 ##
 
@@ -527,18 +559,19 @@ Here is the point geom code:
 ```{r eval=FALSE, warning=FALSE, message=FALSE, echo=TRUE, results="hide"}
   # Plot point geom (scatter plot) UCREATININE vs UALBUMIN, coloring GENDER
   ggplot(data = HANES) + 
-  geom_point(mapping = aes(x = UCREATININE, y = UALBUMIN, color=GENDER)) + 
+  geom_point(mapping = aes(x = UCREATININE, y = UALBUMIN, 
+                           color = GENDER)) + 
   xlim(c(0,100)) + ylim(c(0,10))
 ```
 
-##
 
-And here is the line geom code:
+And here is the smooth (line) geom code:
 
 ```{r eval=FALSE, warning=FALSE, message=FALSE, echo=TRUE, results="hide"}
   # Plot smooth geom UCREATININE vs UALBUMIN, coloring GENDER
   ggplot(data = HANES) + 
-  geom_smooth(mapping = aes(x = UCREATININE, y = UALBUMIN, color=GENDER)) + 
+  geom_smooth(mapping = aes(x = UCREATININE, y = UALBUMIN, 
+                            color = GENDER)) + 
   xlim(c(0,100)) + ylim(c(0,10))
 ```
 
@@ -559,7 +592,8 @@ On the other hand, we could set the color/linetype of a line.
 
 ##
 
-In fact, we can over lay two geoms on the **same** plot - super cool, isn't it (compare it with `abline()` function):
+In fact, we can overlay two geoms on the **same** plot -  
+super cool, isn't it? (compare it with `abline()` function):
 
 ```{r eval=FALSE, warning=FALSE, message=FALSE, echo=TRUE}
   # Plot smooth and point geom in the same plot 
@@ -595,7 +629,8 @@ In other words, this code will produce the same plot as the previous code:
 
 ```{r eval=FALSE, warning=FALSE, message=FALSE, echo=TRUE}
   # Plot smooth and point geom in the same plot 
-  ggplot(data = HANES, mapping = aes(x = UCREATININE, y = UALBUMIN, color=GENDER)) + 
+  ggplot(data = HANES, 
+         mapping = aes(x = UCREATININE, y = UALBUMIN, color=GENDER)) + 
   xlim(c(0,100)) + ylim(c(0,10)) +
   geom_smooth() + 
   geom_point()
@@ -640,11 +675,33 @@ This makes it possible to display different aesthetics in different layers.
   geom_point() 
 ```
 
+
 ##
 
 **Note**: One can use this idea for plotting _different_ data to different layers. 
 
 For example, the geom `geom_point` can be specified to select DX_DBTS variable consisting only diabetic people, for instance.
+
+##
+
+#### **And there are some shortcuts...**
+
+Here is an example of how to quickly plot a two layers plot using the `qplot()` function
+```{r eval=FALSE}
+# Plot a two layers graph
+qplot(CHOLESTEROLTOTAL, HDL, data = HANES,
+  geom = c("point", "smooth"))
+```
+
+##
+
+```{r echo=FALSE}
+# Plot a two layers graph
+qplot(CHOLESTEROLTOTAL, HDL, data = HANES,
+  geom = c("point", "smooth"))
+```
+
+##
 
 ggplot2 provides over 30 geoms, and extension packages provide even more (see https://www.ggplot2-exts.org for a sampling). The best way to get a comprehensive overview is the ggplot2 cheatsheet, which you can find at http://rstudio.com/cheatsheets. To learn more about any single geom, use help: ?geom_smooth.
 
@@ -665,6 +722,9 @@ ggplot2 provides over 30 geoms, and extension packages provide even more (see ht
 
 #### Selected materials and references
 
-[R for Data Science - Explore Part](https://cran.r-project.org/doc/manuals/R-intro.pdf)
+1. [R for Data Science - Explore Part](http://r4ds.had.co.nz/exploratory-data-analysis.html)
+2. [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html#fig:themes)
+3. [Graphs with ggplot2 cookbook](http://www.cookbook-r.com/Graphs/)  
+4. For a deeper understanding of the ggplot object stracture:  
+   [A layered-grammar of graphics, page 15](http://vita.had.co.nz/papers/layered-grammar.pdf)
 
----
