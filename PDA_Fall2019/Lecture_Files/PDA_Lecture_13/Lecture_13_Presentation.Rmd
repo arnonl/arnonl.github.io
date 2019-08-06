@@ -25,7 +25,7 @@ p { text-align: left; }
     color: #ffffff;
 </style>
 
-### Data science fundamentals 06: Basic inference and linear regression (Oct. 31, 2017)
+### Data science fundamentals 05: Basic inference and linear regression (Aug. 6th, 2019)
 
 ---
 
